@@ -1,0 +1,390 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled24.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyMuq+swyg4sKFZmkALAf+aG",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/MuhammadAbdullah768/NLP-Sentiment-Analysis-/blob/main/Sentiment%20Analysis%20(Continued)\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 16,
+      "metadata": {
+        "id": "K6skimTY_eJg"
+      },
+      "outputs": [],
+      "source": [
+        "from sklearn.datasets import fetch_20newsgroups"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "text_data = fetch_20newsgroups()"
+      ],
+      "metadata": {
+        "id": "SL9j92Of_mpt"
+      },
+      "execution_count": 17,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np"
+      ],
+      "metadata": {
+        "id": "U4_nZFPC_xa3"
+      },
+      "execution_count": 18,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "raw_text = text_data.data[:4]"
+      ],
+      "metadata": {
+        "id": "IdUZegMMAzQY"
+      },
+      "execution_count": 21,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Convert to lower text"
+      ],
+      "metadata": {
+        "id": "uF3TOBgIByhg"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "clean_text_1 = []\n",
+        "def to_lower_case(data):\n",
+        "  for words in raw_text:\n",
+        "    clean_text_1.append(str.lower(words))"
+      ],
+      "metadata": {
+        "id": "lmlVlA9VBweU"
+      },
+      "execution_count": 25,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "to_lower_case(raw_text)"
+      ],
+      "metadata": {
+        "id": "Jgv7HlPfCTIV"
+      },
+      "execution_count": 27,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Stage:2 Tokenize"
+      ],
+      "metadata": {
+        "id": "D46rKGp-DBIX"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "clean_text_2 =[]\n",
+        "from nltk.tokenize import sent_tokenize, word_tokenize\n",
+        "import nltk\n",
+        "nltk.download(\"punkt\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "RIpqldGEDE5d",
+        "outputId": "7b8d23f1-ac1d-47ac-a252-71970cb58663"
+      },
+      "execution_count": 31,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "[nltk_data] Downloading package punkt to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping tokenizers/punkt.zip.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 31
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "sent_tok = []\n",
+        "for sent in clean_text_1:\n",
+        "  sent = sent_tokenize(sent)\n",
+        "  sent_tok.append(sent)\n"
+      ],
+      "metadata": {
+        "id": "QnwTf7wqDZv3"
+      },
+      "execution_count": 32,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Word tokenization\n",
+        "clean_text_2 = [word_tokenize(i) for i in clean_text_1]\n"
+      ],
+      "metadata": {
+        "id": "geDQlFLMH7W_"
+      },
+      "execution_count": 44,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import re\n",
+        "\n",
+        "clean_text_3 = []\n",
+        "\n",
+        "for words in clean_text_2:\n",
+        "  clean = []\n",
+        "  for w in words:\n",
+        "    res = re.sub(r'[^\\w\\s]' , \"\", w)\n",
+        "    if res != \"\":\n",
+        "      clean.append(res)\n",
+        "    clean_text_3.append(clean)"
+      ],
+      "metadata": {
+        "id": "cdVCye8cIc0l"
+      },
+      "execution_count": 39,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Stage 4 Stopwords removal"
+      ],
+      "metadata": {
+        "id": "8p4-iPhDJgBF"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import nltk\n",
+        "nltk.download(\"stopwords\")\n",
+        "from nltk.corpus import stopwords"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9JiaQ4zjJWFB",
+        "outputId": "0c71ad7c-1a86-4834-d8b7-611f8f74e57d"
+      },
+      "execution_count": 41,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "[nltk_data] Downloading package stopwords to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/stopwords.zip.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "clean_text_4 = []\n",
+        "\n",
+        "for words in clean_text_3:\n",
+        "  w = []\n",
+        "  for word in words:\n",
+        "    if not word in stopwords.words(\"english\"):\n",
+        "      w.append(word)\n",
+        "    clean_text_4.append(w)"
+      ],
+      "metadata": {
+        "id": "SVOqRJqQJqOw"
+      },
+      "execution_count": 43,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Stage # 5 Stemming"
+      ],
+      "metadata": {
+        "id": "o_aU0PzIKx3E"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from nltk.stem.porter import PorterStemmer\n",
+        "port = PorterStemmer()"
+      ],
+      "metadata": {
+        "id": "ORekCDvBKkuE"
+      },
+      "execution_count": 47,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "a = [port.stem(i) for i in [\"reading\", \"washing\", \"wash\", \"deiving\"]]"
+      ],
+      "metadata": {
+        "id": "mj2nwG63LAMx"
+      },
+      "execution_count": 49,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "clean_text_5 = []\n",
+        "\n",
+        "for words in clean_text_4:\n",
+        "  w = []\n",
+        "  for word in words:\n",
+        "    w.append(word)\n",
+        "  clean_text_5.append(w)"
+      ],
+      "metadata": {
+        "id": "2fwcTQwcLaED"
+      },
+      "execution_count": 50,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Stage # 5 Lammitization"
+      ],
+      "metadata": {
+        "id": "_Gei-cEEL-qy"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from nltk.stem.wordnet import WordNetLemmatizer\n",
+        "wnet = WordNetLemmatizer()\n",
+        "import nltk\n",
+        "nltk.download(\"wordnet\")\n",
+        "nltk.download('omw-1.4')"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Q9UebUGkLv_x",
+        "outputId": "b38148b1-5527-47a6-af2a-386bc2835bff"
+      },
+      "execution_count": 55,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stderr",
+          "text": [
+            "[nltk_data] Downloading package wordnet to /root/nltk_data...\n",
+            "[nltk_data]   Package wordnet is already up-to-date!\n",
+            "[nltk_data] Downloading package omw-1.4 to /root/nltk_data...\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 55
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "lem = []\n",
+        "for words in clean_text_4:\n",
+        "  w = []\n",
+        "  for word in words:\n",
+        "    w.append(wnet.lemmatize(word))\n",
+        "  lem.append(w)"
+      ],
+      "metadata": {
+        "id": "6sUgfOeVMKpu"
+      },
+      "execution_count": 56,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        ""
+      ],
+      "metadata": {
+        "id": "6wG0UVDZM8Qb"
+      },
+      "execution_count": 57,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        ""
+      ],
+      "metadata": {
+        "id": "YhBGJrjIM6QN"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
